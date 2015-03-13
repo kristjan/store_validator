@@ -1,12 +1,15 @@
-# ActiveRecord validations on dynamic columns
+## Store Validator
+
+### ActiveRecord validations on dynamic columns
 
 Using [ActiveRecord::Store](http://api.rubyonrails.org/classes/ActiveRecord/Store.html) enables flexible schema by using postgres' hstore or json type columns.
 
-It can be difficult to make types more static in a flexible `ActiveRecord::Store` implementation, often costly and sometimes impossible without downtime.
+`ActiveRecord::Store` implementation is sometimes too flexible. When data integrity is important, validations are a good way to make sure your data is clean and consistent.
 
 This gem allows validations on specific attributes within those flexible columns.
 
 Store Validator can be used like any other active record validator
+
 ```ruby
 class Foo < ActiveRecord::Base
   store_accessor :settings, :role
@@ -17,7 +20,7 @@ class Foo < ActiveRecord::Base
 end
 ```
 
-Additionally, Store Validator can check types of values in columns. Since store_accessor does not use a statically types column, database adapters like the pg gem do not know how to cast incoming data to proper types. Store Validator can make sure that your data is always as you expect.
+Additionally, Store Validator can check types of values in columns. Since `store_accessor` does not use statically typed columns, database adapters like the pg gem do not know how to cast incoming data to proper types.
 
 ```ruby
 class Foo < ActiveRecord::Base
@@ -38,8 +41,8 @@ class Foo < ActiveRecord::Base
   store_accessor :role
 
   validate_store_accessor :role,
-                          presence: true,
-                          type: :string, in: ['User', 'Admin', 'SuperAdmin']
+                          type: :string,
+                          in: ['User', 'Admin', 'SuperAdmin']
 end
 
 ```
